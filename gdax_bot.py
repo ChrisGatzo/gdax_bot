@@ -166,6 +166,18 @@ if __name__ == "__main__":
         region_name=aws_region
     )
 
+    # Check if sufficient funds otherwise transfer from coinbase account
+    pro_accounts = auth_client.get_accounts()
+    pro_currency_account = [acc for acc in pro_accounts if acc['currency'] == amount_currency][0]
+
+    if Decimal(pro_currency_account['balance']) < amount:
+        print('Depositing funds from coinbase account...')
+        coinbase_accounts = auth_client.get_coinbase_accounts()
+        coinbase_account_id = [acc for acc in coinbase_accounts if acc['currency'] == amount_currency][0]['id']
+        auth_client.coinbase_deposit(float(amount.quantize(quote_increment)), amount_currency, coinbase_account_id)
+        print('Sleeping for 5 seconds for funds to become available in pro')
+        time.sleep(5)
+
     if amount_currency_is_quote_currency:
         result = auth_client.place_market_order(
             product_id=market_name,
