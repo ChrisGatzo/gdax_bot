@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 
+from dotenv import load_dotenv
+
+load_dotenv() 
+
 import argparse
+import os
 import boto3
-import configparser
 import datetime
-import decimal
 import json
 import math
 import sys
@@ -111,19 +114,13 @@ if __name__ == "__main__":
             exit()
 
     # Read settings
-    config = configparser.ConfigParser()
-    config.read(args.config_file)
-
-    config_section = 'production'
-    if sandbox_mode:
-        config_section = 'sandbox'
-    key = config.get(config_section, 'API_KEY')
-    passphrase = config.get(config_section, 'PASSPHRASE')
-    secret = config.get(config_section, 'SECRET_KEY')
-    aws_access_key_id = config.get(config_section, 'AWS_ACCESS_KEY_ID')
-    aws_secret_access_key = config.get(config_section, 'AWS_SECRET_ACCESS_KEY')
-    sns_topic = config.get(config_section, 'SNS_TOPIC')
-    aws_region = config.get(config_section, 'AWS_REGION')
+    key = os.environ.get('API_KEY')
+    passphrase = os.environ.get('PASSPHRASE')
+    secret = os.environ.get('SECRET_KEY')
+    aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
+    aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    sns_topic = os.environ.get('SNS_TOPIC')
+    aws_region = os.environ.get('AWS_REGION')
 
     # Instantiate public and auth API clients
     if not args.sandbox_mode:
