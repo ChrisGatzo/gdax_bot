@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     name: build, test and deploy lambda function
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+    
       - name: Configure AWS credentials
         if: github.ref == 'refs/heads/main'
         uses: aws-actions/configure-aws-credentials@v1
